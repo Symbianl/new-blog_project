@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="">
+    <meta name="author" content="">
+	<link rel="shortcut icon" href="{% static 'images/blog.png' %}" type="image/x-icon">
+    <title>Blog.{{ article.title }}</title>
+
+	
+    <!-- Bootstrap Core CSS -->
+	<link rel="stylesheet" href="http://picturebag.qiniudn.com/monokai.css">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"  type="text/css">
+	
+	<!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+	
+	<!-- Owl Carousel Assets -->
+    <link href="{% static 'owl-carousel/owl.carousel.css' %}" rel="stylesheet">
+    <link href="{% static 'owl-carousel/owl.theme.css' %}" rel="stylesheet">
+	
+	<!-- Custom Fonts -->
+    <link rel="stylesheet" href="{% static 'font-awesome-4.4.0/css/font-awesome.min.css' %}"  type="text/css">
+	
+	<!-- jQuery and Modernizr-->
+	<script src="{% static 'js/jquery-2.1.1.js' %}"></script>
+	
+	<!-- Core JavaScript Files -->  	 
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+	
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="{% static 'js/html5shiv.js' %}"></script>
+        <script src="{% static 'js/respond.min.js' %}"></script>
+    <![endif]-->
+</head>
+
+<body>
+<header>
+	<!--Top-->
+	<nav id="top">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6">
+					<strong>Welcome to Blog  {{username}}!</strong>
+				</div>
+				<div class="col-md-6">
+					<ul class="list-inline top-link link">
+						<li><a href="{% url 'index' %}"><i class="fa fa-home"></i> 首页</a></li>
+						<li><a href="{% url 'error' %}"><i class="fa fa-comments"></i>留言</a></li>
+                    {% if username %}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i>{{ username }} <b class="caret"></b></a>
+								  <ul class="dropdown-menu">
+									<li><a href="{% url 'logout'%}">退出登录</a></li>
+									<li><a href="{% url 'change'%}">修改密码</a></li>
+								  </ul>
+								</li>
+                    {% else %}
+                        <li><a href="{% url 'login' %}"><i class="fa fa-user"></i>登录</a>/<a href="{% url 'register' %}">注册</a></li>
+					{% endif %}
+                    </ul>
+				</div>
+			</div>
+		</div>
+	</nav>
+</header>	
+<!--广告-->
+  {% block left_content %}{% endblock %}
+	<!-- /////////////////////////////////////////Content -->
+
+				<div id="sidebar" class="col-md-4">
+					<!---- Start Widget ---->
+					<div class="widget wid-follow">
+						<div class="heading"><h4>文章热度</h4></div>
+						<div class="content">
+							<ul >
+								{% for article in click_article_list %}
+									<li><a href="{% url 'article' %}?id={{ article.id }}"> {{ article.title }}</a></li>
+								 {% endfor %}
+							</ul>
+						</div>
+					</div>
+					<!---- Start Widget ---->
+					<div class="widget wid-post">
+						<div class="heading"><h4>站长推荐</h4></div>
+						<div class="content">
+							<ul>
+        					{% for read in  recommend_read_list %}
+							<li><a href="{% url 'read' %}?id={{ read.id }}">{{ read.title }}</a></li>
+        					{% endfor %}
+      						</ul>
+
+						</div>
+
+					<!---- Start Widget ---->
+					<div class="widget ">
+						<div class="heading"><h4>文章归档</h4></div>
+						{% for archive in archive_list %}
+						<div class="content">
+								<div class="info">
+									<span><i class="fa fa-calendar"></i><a href='{% url "archive" %}?year={{ archive | slice:":4" }}&month={{ archive | slice:"5:7" }}'>{{ archive }}</a></span>
+									{% endfor %}
+								</div>
+							</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer>
+		<div class="wrap-footer">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-4 col-footer footer-1">
+						<div class="footer-heading"><h1><span style="color: #fff;">文章搜索</span></h1></div>
+						<div class="content">
+							<form role="search" method ="get" action ="/search/">
+								<input type="text" name="s" value="" maxlength = '15' size="40" placeholder="search..." />
+								<input type="submit" value="SUBSCRIBE" class="btn btn-3" />
+							</form>
+						</div>
+					</div>
+					<div class="col-md-4 col-footer footer-2">
+						<div class="footer-heading"><h4>标签云</h4></div>
+						<div class="content">
+			 			<ul>
+						{% for tag in tag_list %}
+						 <a href="{% url 'tag' %}?aid={{ tag.id }}">{{ tag.name }}</a>   <!-- 修改区域，分类-->
+						{% endfor %}
+      					</ul>
+						</div>
+					</div>
+					<div class="col-md-4 col-footer footer-3">
+						<div class="footer-heading"><h4>友情链接</h4></div>
+						<div class="content">
+							<ul>
+        					{% for link in link_list %}
+							<li><a href="{{ link.callback_url }}">{{ link.title }}</a></li>
+        					{% endfor %}
+      						</ul>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="copy-right">
+			<p>精彩世界就在<a target="_blank" href="http://www.sybianl.com/">博客世界</a></p>
+		</div>
+	</footer>
+	<!-- Footer -->
+	
+	<!-- JS -->
+	<script src="{% static 'owl-carousel/owl.carousel.js' %}"></script>
+    <script>
+    $(document).ready(function() {
+      $("#owl-demo").owlCarousel({
+        autoPlay: 3000,
+        items : 5,
+        itemsDesktop : [1199,4],
+        itemsDesktopSmall : [979,4]
+      });
+
+    });
+    </script>
+	
+</body>
+</html>

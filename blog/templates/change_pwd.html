@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<head>
+	<title>修改密码</title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="" />
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/bootstrap-theme.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/templatemo_style.css' %}" rel="stylesheet" type="text/css">
+
+
+</head>
+<body class="templatemo-bg-gray">
+	<div class="container">
+		<div class="col-md-12">
+			<h1 class="margin-bottom-15">修改密码</h1>
+
+			<form class="form-horizontal templatemo-container templatemo-login-form-1 margin-bottom-30" role="form" action="{% url 'change' %}" method="post">
+		       {% csrf_token %}
+
+				<div class="form-group">
+		          <div class="col-md-12">
+		          	<div class="control-wrapper">
+		            	<label  class="control-label fa-label"><i class="fa fa-lock fa-medium"></i></label>
+						{{uf.password}} <font color="red">{{uf.password.errors|safe}}</font>
+
+		            </div>		            	            
+		          </div>              
+		        </div>
+				  <div class="form-group">
+		          <div class="col-md-12">
+		          	<div class="control-wrapper">
+		            	<label  class="control-label fa-label"><i class="fa fa-lock fa-medium"></i></label>
+		            	{{uf.newpassword}}<font color="red"> {{uf.newpassword.errors|safe}}</font>
+		            </div>
+		          </div>
+		        </div>
+		        <div class="form-group">
+		          <div class="col-md-12">
+		          	<div class="control-wrapper">
+		            	<label  class="control-label fa-label"><i class="fa fa-lock fa-medium"></i></label>
+						{{uf.newpassword1}}<font color="red"> {{uf.newpassword1.errors|safe}}</font>
+		            </div>
+		          </div>
+		        </div>
+		        <div class="form-group">
+		          <div class="col-md-12">
+		          	<div class="control-wrapper">
+		          		<input type="submit" value="确认修改" class="btn btn-info">
+		          	</div>
+		          </div>
+		        </div>
+		        <hr>
+		      </form>
+		</div>
+	</div>
+</body>
+</html>

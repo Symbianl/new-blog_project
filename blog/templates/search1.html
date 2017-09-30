@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block left_content %}
+{% csrf_token %}
+	<div id="page-content" class="archive-page container">
+		<div class="">
+      <h2>搜索  ：  {{ s }}</h2>
+			 {% if error %}
+  	<h2>没有相关文章</h2>     <!--这句话加上试下--->
+			 {% endif %}
+       {% for article in article %}
+			<div class="row">
+				<div id="main-content" class="col-md-8">
+					<div class="box">
+						<a href="{% url 'article' %}?id={{ article.id }}"><h2 class="vid-name">{{ article.title }}</h2></a>
+						<div class="info">
+							<h5>By <a href="#">{{ article.user.username }}</a></h5>
+							<span><i class="fa fa-calendar"></i> {{ article.date_publish | date:'Y-m-d' }}</span>
+							<span><i class="fa fa-comment"></i>{{ article.read_num }}</span>
+							<!--<span><i class="fa fa-heart"></i></span>-->
+							<ul class="list-inline">
+								{% for tag in article.tag.all %}
+								<li><a href="{% url 'tag' %}?aid={{ tag.id }}">{{ tag.name }}</a></li>
+								{% endfor %}
+							</ul>
+						</div>
+						<div class="wrap-vid">
+							<div class="zoom-container">
+								<div class="zoom-caption">
+								</div>
+								<img id="{{ article.id }}" src="{{ SITE_URL }}uploads/{{ article.image }}" />
+							</div>
+							<p>{{ article.desc }} <a href="{% url 'article' %}?id={{ article.id }}">MORE...</a></p>
+						</div>
+					</div>
+					{% endfor %}
+
+				</div>
+
+{% endblock %}
+

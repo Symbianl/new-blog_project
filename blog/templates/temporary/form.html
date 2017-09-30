@@ -1,0 +1,27 @@
+{% load staticfiles %}
+{% load comments i18n crispy_forms_tags %}
+<link rel="stylesheet" href="{% static 'css/mycomments.css' %}">
+
+<!-- 在 jquery.js 之后引入 -->
+<script src="{% static 'js/mycomments.js' %}"></script>
+{% if user.is_authenticated %}
+<script>
+    jQuery(function($) {
+        setAuthenticatedUser();
+    });
+</script>
+{% endif %}
+<!-- Comments Form -->
+<div id="wrap-form-comment">
+    <div class="well" id="form-comment">
+        <h4>Leave a Comment:</h4>
+        <form role="form" action="{% comment_form_target %}" method="post">{% csrf_token %}
+        {% if next %}
+            <div><input type="hidden" name="next" value="{{ next }}"/></div>
+        {% endif %}
+            {% crispy form %}
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button id="cancel_reply" type="button" class="btn btn-default">Cancel Reply</button>
+        </form>
+    </div>
+</div>

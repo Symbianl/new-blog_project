@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load myfilter %}
+{% block left_content %}
+{% block extra_footer %}
+{% load threadedcomments_tags %}
+  <!--  {#设置提交评论#} -->
+
+
+{% endblock %}
+	
+	<!-- /////////////////////////////////////////Content -->
+	<div id="page-content" class="single-page container">
+		<div class="row">
+			<div id="main-content" class="col-md-8">
+				<div class="box">
+					<div class="line"></div>
+					<h1 class="vid-name"><a href="" title="{{ article.title }}">{{ article.title }}</a></h1>
+					<div class="info">
+						<h5>By <a href="#">{{ article.user.username }}</a></h5>
+						<span><i class="fa fa-calendar"></i>{{ article.date_publish | date:'Y-m-d' }}</span>
+						<span><i class="fa fa-heart"></i>{{ article.read_num }}</span>
+					</div>
+					<p style="margin-top: 20px"> {{ article.content | safe }}</p>
+
+
+				</div>
+
+				<div class="box">
+					<div class="box-header header-natural">
+					</div>
+					<div class="box-content">
+						<div class="row">
+							<div class="col-md-4">
+								<div class="wrap-vid">
+									<div class="zoom-container">
+										<div class="zoom-caption">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4">9
+								<div class="wrap-vid">
+									<div class="zoom-container">
+										<div class="zoom-caption">
+											</a>
+
+										</div>
+									</div>
+
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="wrap-vid">
+									<div class="zoom-container">
+										<div class="zoom-caption">
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+				<!---- Start Widget ---->
+{% endblock %}

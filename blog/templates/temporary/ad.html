@@ -1,0 +1,34 @@
+{% load staticfiles %}
+	<div class="featured container">
+		<div id="owl-demo" class="owl-carousel">
+			<div class="item">
+				<div class="zoom-container">
+					<div class="zoom-caption">
+						<span>BOLG</span>
+						<a href="{{ ad.callback_url }}"></a>
+						<p></p>
+					</div>
+					{% for ad in ad_list %}
+					<img  id="{{ ad.id }}" src="uploads/{{ ad.image_url }}" />
+					{% endfor %}
+				</div>
+			</div>
+			</div>
+			</div>
+		</div>
+      <script>
+    if(!window.slider) {
+    var slider={};
+  }
+  slider.data= [
+    {% for ad in ad_list %}
+    {
+        "id":"{{ ad.id }}", // 与slide-runner中的img标签id对应
+        "client":"{{ ad.title }}",
+        "desc":"{{ ad.description }}" //这里修改描述
+    },
+    {% endfor %}
+  ];
+    </script>
+	</div>
+	<!-- Header -->

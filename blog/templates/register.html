@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<head>
+	<title>注册</title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="" />
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/bootstrap-theme.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/templatemo_style.css' %}" rel="stylesheet" type="text/css">
+</head>
+<body class="templatemo-bg-gray">
+	<h1 class="margin-bottom-15">注册</h1>
+	<div class="container">
+		<div class="col-md-12">			
+			<form class="form-horizontal templatemo-create-account templatemo-container" role="form" action="{% url 'register' %}" method="post" enctype="multipart/form-data">
+				{% csrf_token %}
+
+				<div class="form-inner">
+					<div class="form-group">
+			          <div class="col-md-6">		          	
+			            <label  class="control-label">姓</label>
+			            {{uf.firstname}}<font color="red">{{uf.firstname.errors|safe}}</font>
+			          </div>  
+			          <div class="col-md-6">		          	
+			                <label  class="control-label">名</label>
+			            {{uf.lastname}}<font color="red">{{uf.lastname.errors|safe}}</font>
+			          </div>
+			        </div>
+			        <div class="form-group">
+			          <div class="col-md-12">		          	
+			            <label  class="control-label">邮箱</label>
+			            {{uf.email}}<font color="red">{{uf.email.errors|safe}}</font>
+			          </div>              
+			        </div>			
+			        <div class="form-group">
+			          <div class="col-md-6">		          	
+			            <label  class="control-label">用户名</label>
+			             {{uf.username}}<font color="red">{{uf.username.errors|safe}}</font>
+			          </div>
+			         <div class="col-md-6 templatemo-radio-group">
+			          	<label class="radio-inline">性别</label>
+						 <font color="red">{{uf.sex.errors|safe}}</font>
+						 {% for sex in uf.sex %}
+   								{{ sex }}
+						 {% endfor %}
+		          		<!--	<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1"> 男
+		          		</label>
+		          		<label class="radio-inline">
+		          			<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2"> 女 -->
+			          </div>             
+			        </div>
+			        <div class="form-group">
+			          <div class="col-md-6">
+			            <label  class="control-label">密码</label>
+			            {{uf.password}}<font color="red">{{uf.password.errors|safe}}</font>
+			          </div>
+					  <div class="form-group">
+			            <div class="col-md-6">
+			            <label  class="control-label">确认密码</label>
+			             {{uf.password1}}<font color="red">{{uf.password1.errors|safe}}</font>
+			          </div>
+			        </div>
+			        <div class="form-group">
+			          <div class="col-md-12">
+			            <label><input type="checkbox">我同意 <a href="javascript:;" data-toggle="modal" data-target="#templatemo_modal">服务条款</a> 和 <a href="">隐私政策。</a></label>
+			          </div>
+			        </div>
+			        <div class="form-group">
+			          <div class="col-md-12">
+			            <input type="submit" value="创建用户" class="btn btn-info">
+			            <a href="{% url 'login' %}" class="pull-right">登录</a>
+			          </div>
+			        </div>	
+				</div>				    	
+		      </form>		      
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="templatemo_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+	        <h4 class="modal-title" id="myModalLabel">服务条款</h4>
+	      </div>
+	      <div class="modal-body"><!--服务条款信息-->
+	      	<p>欢迎注册 <a rel="nofollow" href="http://symbianl.duapp.com/">John博客</a>  .</p>
+	        <p></p>
+	        <p></p>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<script type="text/javascript" src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>
+</body>
+</html>

@@ -216,9 +216,6 @@ def logout(request):
     return HttpResponseRedirect('/')
 
 
-
-
-
 @csrf_exempt
 def register(request):
     if request.method =='POST':

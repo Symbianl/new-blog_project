@@ -26,8 +26,6 @@ urlpatterns = [
     url(r'^admin/upload/(?P<dir_name>[^/]+)$', upload_image, name='upload_image'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include('blog.urls')),
-
-
-    #url(r'^comments/',include('django_comments.urls')),
+    url(r'^comments/',include('django_comments.urls')),
 
 ]

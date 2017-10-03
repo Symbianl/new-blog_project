@@ -3,7 +3,8 @@
 {% load myfilter %}
 {% block left_content %}
 {% block extra_footer %}
-{% load threadedcomments_tags %}
+{# 导入评论模块的模板标签 #}
+{% load comments %}
   <!--  {#设置提交评论#} -->
 
 
@@ -22,8 +23,6 @@
 						<span><i class="fa fa-heart"></i>{{ article.read_num }}</span>
 					</div>
 					<p style="margin-top: 20px"> {{ article.content | safe }}</p>
-
-
 				</div>
 
 				<div class="box">
@@ -39,17 +38,108 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-md-4">9
-								<div class="wrap-vid">
-									<div class="zoom-container">
-										<div class="zoom-caption">
-											</a>
+                            {# 评论 #}
+                           <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>新的评论</h4>
+        </div>
 
-										</div>
-									</div>
+        <div class="panel-body">
+            <div class="comments_nav">
+                {% if user.is_authenticated %}
+                    {% if user.is_active %}
+                        {% get_comment_form for article as blog_form %}
+                        <form class="form-horizontal" action="{% comment_form_target %}" method="post" id="comment_form">
+                            {% csrf_token %}
+                            {{ blog_form.object_pk }}
+                            {{ blog_form.content_type }}
+                            {{ blog_form.timestamp }}
+                            {{ blog_form.site }}
+                            {{ blog_form.submit_date }}
+                            {{ blog_form.security_hash }}
+                            <input type="hidden" name="next" value="{% url 'article' %}?id={{ article.id }}"/>
+                            <input type="hidden" name="reply_to" value="0" />
+{#这部分不加也行，django_comments会自动取登录的用户信息#}
+{#<input type="hidden" name="name" value="{%if user.first_name%}{{user.first_name}}{%else%}{{user.username}}{%endif%}"/>#}
+                            {#<input type="hidden" name="email" value="{{ user.email }}"/>#}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <a name="newcomment" id="newcomment"></a>
+                                    <textarea class="input-xlarge comment_text" id="id_comment" name="comment" placeholder="请输入评论内容"></textarea>
 
-								</div>
-							</div>
+                                    <p style="display:none;">
+                                        <label for="id_honeypot">如果你在该字段中输入任何内容，你的评论就会被视为垃圾评论。</label> <input type="text" name="honeypot" id="id_honeypot">
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                  <div class="form-actions comment_button">
+                                    <input class="btn btn-info" id="submit_btn" type="submit" name="submit" value="提交"/>
+                                    <input class="btn" id="reset_btn" type="reset" name="submit" value="清空"/>
+                                  </div>
+                            </div>
+                         </form>
+                    {% else %}
+                        您尚未激活，请先激活您的账户才能评论。(避免垃圾评论)
+                    {% endif %}
+                {% else %}
+                    您尚未登录，请先登录才能评论。(可以通过邮件得到评论提醒)
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>评论列表</h4>
+        </div>
+
+        <div class="panel-body">
+            {% get_comment_list for article as comments %}
+            {% for comment in comments %}
+                <div class="blog_comment" name="F{{comment.id}}">
+                    <p class="comment_title">#{{ comment.submit_date|date:"Y-m-d H:i"}} @ {{ comment.user_name }}</p>
+                    <p class="comment_content">{{ comment.comment }}</p>
+                </div>
+
+            {% empty %}
+                暂无评论
+            {% endfor %}
+        </div>
+    </div>
+
+    {#设置提交评论#}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            //代码高亮
+            prettyPrint();
+            //评论设置
+            $('#comment_form').submit(function() {
+                if ($("#id_honeypot").val().length!=0) {alert("Stop!垃圾评论");return false;};
+                if ($("#id_comment").val().length==0) {alert("Error:请输入您的评论");$("#id_comment").focus();return false;};
+
+                $("#id_timestamp").value=event.timeStamp;
+
+                $.ajax({
+                    type: "POST",
+                    data: $('#comment_form').serialize(),
+                    url: "{% comment_form_target %}",
+                    cache: false,
+                    dataType: "html",
+                    success: function(html, textStatus) {
+                        window.location.reload();
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert("评论出错，检查是否缺少内容 " + errorThrown);
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+
+
 							<div class="col-md-4">
 								<div class="wrap-vid">
 									<div class="zoom-container">
@@ -63,5 +153,7 @@
 					</div>
 				</div>
 			</div>
-				<!---- Start Widget ---->
+    {#设置提交评论#}
+
+    	    <!---- Start Widget ---->
 {% endblock %}

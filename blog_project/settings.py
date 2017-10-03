@@ -35,8 +35,6 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 # Application definition
 
 INSTALLED_APPS = (
-    'crispy_forms',
-    'threadedcomments',
     'django_comments',
     'bootstrap_admin',
     'django.contrib.admin',
@@ -47,9 +45,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'blog',
-
-   # 'users2',
 )
+
+SITE_ID=1
 
 from django.conf import global_settings
 
@@ -59,7 +57,7 @@ TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
 
 )
 BOOTSTRAP_ADMIN_SIDEBAR_MENU = True
-SITE_ID=1
+
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

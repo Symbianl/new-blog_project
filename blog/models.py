@@ -4,9 +4,21 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
-# 用户模型.
-# 第一种：采用的继承方式扩展用户信息（本系统采用）
-# 扩展：关联的方式去扩展用户信息
+class user_x(models.Model):
+    username = models.CharField(max_length=20)
+    phone = models.CharField(max_length=11,blank=False,null=True,verbose_name='手机号码')
+    email =models.EmailField(max_length=30,blank=False,null=True,verbose_name='邮箱')
+
+
+    class Meta:
+        verbose_name = "管理员"
+        verbose_name_plural = verbose_name
+        ordering = ['id']
+
+    def __unicode__(self):
+        return self.username
+
+
 class User(AbstractUser):
     avatar = models.ImageField(upload_to='avatar/%Y/%m', default='avatar/default.png', max_length=200, blank=True, null=True, verbose_name='用户头像')
     qq = models.CharField(max_length=20, blank=True, null=True, verbose_name='QQ号码')
@@ -14,7 +26,7 @@ class User(AbstractUser):
     url = models.URLField(max_length=100, blank=True, null=True, verbose_name='个人网页地址')
 
     class Meta:
-        verbose_name = '后台用户'
+        verbose_name = '用户'
         verbose_name_plural = verbose_name
         ordering = ['-id']
 
@@ -71,7 +83,7 @@ class Article(models.Model):
     read_num = models.IntegerField(default=0, verbose_name='浏览数目')#,blank=True, null=0)
     is_recommend = models.BooleanField(default=False, verbose_name='是否推荐')
     date_publish = models.DateTimeField(auto_now_add=True, verbose_name='发布时间')
-    user = models.ForeignKey(User, verbose_name='用户')
+    user = models.ForeignKey(user_x, verbose_name='用户')
    # category = models.ForeignKey(Category, blank=True, null=True, verbose_name='分类')
     tag = models.ManyToManyField(Tag, verbose_name='标签')
 
@@ -92,15 +104,15 @@ class Read(models.Model):
     content = models.TextField(verbose_name='文章内容')
   #  image_s = models.ImageField(upload_to='read/%Y/%m', null=True, verbose_name='选择图片')
     date_publish = models.DateTimeField(auto_now_add=True, verbose_name='发布时间')
-    user = models.ForeignKey(User, verbose_name='用户')
+    user = models.ForeignKey(user_x, verbose_name='用户')
     tag = models.ManyToManyField(Tag, verbose_name='标签')
-    index = models.IntegerField(default=999, verbose_name='排列顺序(从小到大)')
+    order = models.IntegerField(default=999, verbose_name='排列顺序(从小到大)')
 
 
     class Meta:
         verbose_name = '站长推荐'
         verbose_name_plural = verbose_name
-        ordering = ['index', 'id','-date_publish']
+        ordering = ['order', 'id','-date_publish']
 
 
     def __unicode__(self):
@@ -150,37 +162,16 @@ class Ad(models.Model):
     image_url = models.ImageField(upload_to='ad/%Y/%m', verbose_name='图片路径')
     callback_url = models.URLField(null=True, blank=True, verbose_name='回调url')
     date_publish = models.DateTimeField(auto_now_add=True, verbose_name='发布时间')
-    index = models.IntegerField(default=999, verbose_name='排列顺序(从小到大)')
+    order = models.IntegerField(default=999, verbose_name='排列顺序(从小到大)')
 
     class Meta:
         verbose_name = u'广告'
         verbose_name_plural = verbose_name
-        ordering = ['index', 'id']
+        ordering = ['order', 'id']
 
     def __unicode__(self):
         return self.title
 
-SEX_CHOICES=(
-    ('male','男'),
-    ('female','女')
-)
-
-class user_x(models.Model):
-    firstname = models.CharField(max_length=10)
-    lastname = models.CharField(max_length=10)
-    username = models.CharField(max_length=20)
-    password = models.CharField(max_length=10)
-    sex = models.CharField(max_length=10,choices=SEX_CHOICES,null=True,blank=True)
-    #phone = models.CharField(max_length=15,null=True,blank=True)
-    email = models.EmailField()
-
-    class Meta:
-        verbose_name = u'注册用户'
-        verbose_name_plural = verbose_name
-        ordering = ['id']
-
-    def __unicode__(self):
-        return self.username
 
 
 class message(models.Model):

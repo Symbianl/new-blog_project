@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 {% load staticfiles %}
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -24,19 +24,7 @@
 	
 	<!-- Custom Fonts -->
     <link rel="stylesheet" href="{% static 'font-awesome-4.4.0/css/font-awesome.min.css' %}"  type="text/css">
-	
-	<!-- jQuery and Modernizr-->
-	<script src="{% static 'js/jquery-2.1.1.js' %}"></script>
-	
-	<!-- Core JavaScript Files -->  	 
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-	
-	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="{% static 'js/html5shiv.js' %}"></script>
-        <script src="{% static 'js/respond.min.js' %}"></script>
-    <![endif]-->
+
 </head>
 
 <body>
@@ -46,23 +34,25 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-6">
-					<strong>Welcome to Blog  {{username}}!</strong>
+					<strong>Welcome to Blog  {{user.username}} !</strong>
 				</div>
 				<div class="col-md-6">
 					<ul class="list-inline top-link link">
 						<li><a href="{% url 'index' %}"><i class="fa fa-home"></i> 首页</a></li>
 						<li><a href="{% url 'error' %}"><i class="fa fa-comments"></i>留言</a></li>
-                    {% if username %}
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i>{{ username }} <b class="caret"></b></a>
+                        {% if user.is_authenticated %}
+                            <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i>{{ user.username }} <b class="caret"></b></a>
 								  <ul class="dropdown-menu">
-									<li><a href="{% url 'logout'%}">退出登录</a></li>
-									<li><a href="{% url 'change'%}">修改密码</a></li>
+									<li><a href="{% url 'logout' %}?next={{ request.path }}?id={{ article.id }}">注销登录</a></li>
+									<li><a href="{% url 'password_change' %}">修改密码</a></li><!-- 修改密码成功返回登录界面 -->
+                                    <li><a href="{% url 'password_reset' %}">忘记密码</a></li>
 								  </ul>
 								</li>
-                    {% else %}
-                        <li><a href="{% url 'login' %}"><i class="fa fa-user"></i>登录</a>/<a href="{% url 'register' %}">注册</a></li>
-					{% endif %}
+                        {% else %}
+                            <li><a href="{% url 'login' %}?next={{ request.path }}?id={{ article.id }}"><i class="fa fa-user"></i>登录</a>/<a href="{% url 'register' %}">注册</a></li>
+                        {% endif %}
+
                     </ul>
 				</div>
 			</div>
@@ -157,7 +147,21 @@
 		</div>
 	</footer>
 	<!-- Footer -->
-	
+
+    <!-- jQuery and Modernizr-->
+	<script src="{% static 'js/jquery-2.1.1.js' %}"></script>
+
+	<!-- Core JavaScript Files -->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="{% static 'js/html5shiv.js' %}"></script>
+        <script src="{% static 'js/respond.min.js' %}"></script>
+    <![endif]-->
+
+
 	<!-- JS -->
 	<script src="{% static 'owl-carousel/owl.carousel.js' %}"></script>
     <script>

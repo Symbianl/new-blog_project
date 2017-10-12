@@ -12,14 +12,10 @@ from django.contrib.auth.hashers import make_password
 from django.core.paginator import Paginator, InvalidPage, EmptyPage, PageNotAnInteger
 from django.db import connection
 from django.db.models import Count
-#from django_comments.models import Comment
 from models import *
-from forms import *
-#import pdb
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.conf import settings as django_settings
-from django.forms.util import ErrorList
 from django.contrib.auth.decorators import login_required
 import datetime
 from django.core.mail import send_mail
@@ -134,7 +130,9 @@ def article(request):
     response = render(request,'article.html',{'article':article})
     response.set_cookie('article_%s_readed'%(id),'True')
     return render(request, 'article.html', locals())
+
     return response
+
 
 
 def read(request):
@@ -195,68 +193,6 @@ def search(request):
                               context_instance=RequestContext(request))
 
 
-
-@csrf_exempt
-def login(request):
-    if request.method == 'POST':
-        uf =LoginForm(request.POST)#创建LoginForm的对象请求为POST
-        if uf.is_valid():
-            username = uf.cleaned_data['username']
-            password = uf.cleaned_data['password']
-            userResult = user_x.objects.filter(username=username,password=password)
-            request.session['username'] = username
-            if (len(userResult)>0):
-                return HttpResponseRedirect(request.META.get('HTTP_PEFERER','/'),)
-    else:
-        uf = LoginForm()
-    return render_to_response('login.html',{'uf':uf})
-
-def logout(request):
-    auth.logout(request)
-    return HttpResponseRedirect('/')
-
-
-@csrf_exempt
-def register(request):
-    if request.method =='POST':
-        uf = RegForm(request.POST)
-        if uf.is_valid():
-            firstname = uf.cleaned_data['firstname']
-            lastname = uf.cleaned_data['lastname']
-            username = uf.cleaned_data['username']
-            filterResult = user_x.objects.filter(firstname = firstname,lastname = lastname,username = username)
-
-            if len(filterResult)>0:
-                return HttpResponseRedirect(request.META.get('HTTP_PEFERER', '/register'), )
-               # return render_to_response('register.html',{"errors":"用户已经存在"})
-            else:
-                password = uf.cleaned_data["password"]
-                password1 = uf.cleaned_data["password1"]
-                email = uf.cleaned_data['email']
-                user = user_x.objects.create(firstname = firstname ,lastname = lastname ,username = username , password =password, email = email)
-                user.save()
-                return HttpResponseRedirect(request.META.get('HTTP_PEFERER', '/login'), )
-              #  return render_to_response('success.html',{'username':username})
-    else:
-        uf = RegForm()
-    return render_to_response('register.html',{'uf':uf})
-
-
-@csrf_exempt
-def change(request):
-    if request.method =='POST':
-        uf = ChangepwdForm(request.POST)
-        if uf.is_valid():
-            password = uf.cleaned_data['password']
-            user = user_x.objects.create(password = password )
-            if user :
-                newpassword = request.POST.get('newpassword1')
-
-                user.save()
-                return HttpResponseRedirect(request.META.get('HTTP_PEFERER', '/login'), )
-    else:
-        uf = ChangepwdForm()
-    return render_to_response('change_pwd.html',{'uf':uf})
 
 
 def error(request):

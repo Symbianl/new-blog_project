@@ -106,13 +106,13 @@ class Read(models.Model):
     date_publish = models.DateTimeField(auto_now_add=True, verbose_name='发布时间')
     user = models.ForeignKey(user_x, verbose_name='用户')
     tag = models.ManyToManyField(Tag, verbose_name='标签')
-    order = models.IntegerField(default=999, verbose_name='排列顺序(从小到大)')
+    index = models.IntegerField(default=999, verbose_name='排列顺序(从小到大)')
 
 
     class Meta:
         verbose_name = '站长推荐'
         verbose_name_plural = verbose_name
-        ordering = ['order', 'id','-date_publish']
+        ordering = ['index', 'id','-date_publish']
 
 
     def __unicode__(self):
@@ -155,22 +155,22 @@ class Links(models.Model):
     def __unicode__(self):
         return self.title
 
-# 广告
-class Ad(models.Model):
-    title = models.CharField(max_length=50, verbose_name='广告标题')
-    description = models.CharField(max_length=200,  verbose_name='广告描述')
-    image_url = models.ImageField(upload_to='ad/%Y/%m', verbose_name='图片路径')
-    callback_url = models.URLField(null=True, blank=True, verbose_name='回调url')
-    date_publish = models.DateTimeField(auto_now_add=True, verbose_name='发布时间')
-    order = models.IntegerField(default=999, verbose_name='排列顺序(从小到大)')
-
-    class Meta:
-        verbose_name = u'广告'
-        verbose_name_plural = verbose_name
-        ordering = ['order', 'id']
-
-    def __unicode__(self):
-        return self.title
+#广告
+# class Ad(models.Model):
+#     title = models.CharField(max_length=50, verbose_name='广告标题')
+#     description = models.CharField(max_length=200,  verbose_name='广告描述')
+#     image_url = models.ImageField(upload_to='ad/%Y/%m', verbose_name='图片路径')
+#     callback_url = models.URLField(null=True, blank=True, verbose_name='回调url')
+#     date_publish = models.DateTimeField(auto_now_add=True, verbose_name='发布时间')
+#     index = models.IntegerField(default=999, verbose_name='排列顺序(从小到大)')
+#
+#     class Meta:
+#         verbose_name = u'广告'
+#         verbose_name_plural = verbose_name
+#         ordering = ['index', 'id']
+#
+#     def __unicode__(self):
+#         return self.title
 
 
 

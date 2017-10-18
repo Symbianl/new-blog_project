@@ -1,30 +1,243 @@
-<div class="comment">
-    <div class="comment-main">
-        <p class="head">评论详情</p>
-        <form method="post" action="{% url 'blog:comment' article.pk %}">
-            {% csrf_token %}
-            <div class="row">
-                {% for field in form %}
-                    {{ field }}
-                    {{ field.errors }}
-                    <br>
-                {% endfor %}
+{% load comments %}
+{% load staticfiles %}
+<!--  {#设置提交评论#} -->
+<script src="{% static 'js/jquery-2.1.1.js' %}"></script>
+<script src="{% static 'js/prettify.js' %}"></script>
+<style>
+/*评论*/
+.blog_comment{
+    border-bottom: 1px solid #ddd;/*下划线*/
+}
+.blog_comment .comment_title{
+    margin-top: 0.5em;
+}
+.blog_comment .comment-content {
+    padding: 0.5em;
+    border-radius: 6px;
+    background-color: #efefef;
+}
+/*回复*/
+.blog_comment .comment_reply{
+    text-indent: 0.5em;
+}
+
+
+</style>
+
+<div class="panel panel-default">
+     <div class="panel-heading">
+                <h4>新的评论</h4>
             </div>
-            <button type="submit" class="com-button">评论</button>
-        </form>
-        <p class="comment-count">共{{ 0 }}条评论</p>
-        <hr>
-        {% for comment in comment_list %}
-            <div class="main-content">
-{#                <img src="月英1.jpg" class="user-avatar">#}
-                <span class="user-nickname">{{ comment.user_name }}</span>
-                <time class="time">{{ comment.created_time }}</time>
-                <div class="comment-content">
-                    {{ comment.body }}
+
+            <div class="panel-body">
+                <div class="comments_nav">
+                    {% if user.is_authenticated %}
+                        {% if user.is_active %}
+                            {% get_comment_form for article as blog_form %}
+                            <form class="form-horizontal" action="{% comment_form_target %}" method="post" id="comment_form">
+                                {% csrf_token %}
+                                {{ blog_form.object_pk }}
+                                {{ blog_form.content_type }}
+                                {{ blog_form.timestamp }}
+                                {{ blog_form.site }}
+                                {{ blog_form.submit_date }}
+                                {{ blog_form.security_hash }}
+                                <input type="hidden" name="next" value="{% url 'article' %}?id={{ article.id }}"/>
+                                <input type="hidden" name="reply_to" value="0" />
+    {#这部分不加也行，django_comments会自动取登录的用户信息#}
+    {#<input type="hidden" name="name" value="{%if user.first_name%}{{user.first_name}}{%else%}{{user.username}}{%endif%}"/>#}
+                                {#<input type="hidden" name="email" value="{{ user.email }}"/>#}
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <a name="newcomment" id="newcomment"></a>
+                                        <textarea class="input-xlarge comment_text" id="id_comment" name="comment" placeholder="请输入评论内容" style="margin: 0px; width: 733px; height: 102px;"></textarea>
+
+                                        <p style="display:none;">
+                                            <label for="id_honeypot">如果你在该字段中输入任何内容，你的评论就会被视为垃圾评论。</label> <input type="text" name="honeypot" id="id_honeypot">
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                      <div class="form-actions comment_button">
+                                        <input class="btn btn-info" id="submit_btn" type="submit" name="submit" value="提交"/>
+                                        <input class="btn" id="reset_btn" type="reset" name="submit" value="清空"/>
+                                      </div>
+                                </div>
+                             </form>
+                        {% endif %}
+                    {% else %}
+                        您尚未登录，请先登录才能评论。
+                    {% endif %}
                 </div>
-{#                <a href="">回复</a>#}
             </div>
-            <hr>
-        {% endfor %}
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>评论列表</h4>
+            </div>
+
+            <div class="panel-body">
+                {% get_comment_list for article as comments %}
+                {% for comment in comments %}
+                    <div class="blog_comment" name="F{{comment.id}}">
+                        <p class="comment_title">
+                            {{comment.submit_date|date:"Y-m-d H:i"}} @ {{comment.user_name}} 评论
+                        </p>
+                        <p class="comment_content"
+                           root='{{comment.id}}'
+                           role='{{comment.id}}'
+                           base='{{comment.user_name}}'>
+                           {{ comment.comment }}
+                        </p>
+                        <ul class="comment_reply">
+                            {% for reply in comment.replies %}
+                                <li root='{{reply.root_id}}'
+                                    role='{{reply.id}}'
+                                    base='{{reply.user_name}}'>
+                                    {{reply.user_name}} 回复 {{reply.reply_name}} ({{ reply.submit_date|date:"Y-m-d H:i"}})：{{ reply.comment }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                {% empty %}
+                    暂无评论
+                {% endfor %}
+
+            </div>
+
+
+            {# 回复 #}
+            <div id="reply_form" style="display:none;text-indent:0;">
+            <!--这里需要get_comment_form 这句话，若前面评论部分你有定义就结合一下修改-->
+           {% get_comment_list for article as comments %}
+            <form action="#" id="reply_update_form">
+                {% csrf_token %}
+                {{ blog_form.object_pk }}
+                {{ blog_form.content_type }}
+                {{ blog_form.timestamp }}
+                {{ blog_form.site }}
+                {{ blog_form.submit_date }}
+                {{ blog_form.security_hash }}
+                <input type="hidden" name="next" value="{% url 'article' %}?id={{ article.id }}"/>
+                <input id="reply_to" type="hidden" name="reply_to" value="0" />
+                <input id="root_id" type="hidden" name="root_id" value="0" />
+                <input id="reply_name" type="hidden" name="reply_name" value="">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <textarea class="input-xlarge comment_text" id="id_comment_reply" name="comment" placeholder="请输入回复内容"  style="margin: 0px; width: 670px; height: 99px;"></textarea>
+                        <input type="text" style="display:none;" id="id_honeypot_reply" name="honeypot">
+                    </div>
+                </div>
+
+                <div class="row">
+                      <div class="form-actions comment_button">
+                        <input class="btn btn-info" id="submit_reply" type="submit" name="submit" value="回复"/>
+                        <input class="btn" id="reset_btn" type="reset" name="submit" value="清空"/>
+                      </div>
+                </div>
+            </form>
+        </div>
+
+
     </div>
-</div>
+
+    {#设置提交评论#}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            //代码高亮
+            prettyPrint();
+            //评论设置
+            $('#comment_form').submit(function() {
+                if ($("#id_honeypot").val().length!=0) {alert("Stop!垃圾评论");return false;};
+                if ($("#id_comment").val().length==0) {alert("Error:请输入您的评论");$("#id_comment").focus();return false;};
+
+                $("#id_timestamp").value=event.timeStamp;
+
+                $.ajax({
+                    type: "POST",
+                    data: $('#comment_form').serialize(),
+                    url: "{% comment_form_target %}",
+                    cache: false,
+                    dataType: "json",
+                    success: function(json, textStatus) {
+                        window.location.reload();
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert("评论出错，检查是否缺少内容 " + errorThrown);
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+
+    {# 评论回复 #}
+    <script type="text/javascript">
+   $(document).ready(function() {
+    //绑定回复提交事件
+    $('#reply_update_form').submit(function() {
+        if ($("#id_honeypot_reply").val().length!=0) {alert("Stop!垃圾评论");return false;};
+        if ($("#id_comment_reply").val().length==0) {alert("Error:请输入您的回复内容");$("#id_comment").focus();return false;};
+
+        $("#id_timestamp").val(event.timeStamp);
+
+        $.ajax({
+            type: "POST",
+            data: $('#reply_update_form').serialize(),
+            url: "{% comment_form_target %}",
+            cache: false,
+            dataType: "json",
+            success: function(json, textStatus) {
+                if(json['success']){
+                    window.location.reload();
+                }else{
+                    if(json['code']==501){
+                        alert('您尚未登录，请先登录才能评论。');
+                    }else{
+                        alert('评论出错，请刷新重试\n'+json['message']);
+                    }
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("评论出错\n请检查是否登录了或者刷新试试\n" + errorThrown);
+            }
+        });
+        return false;
+    });
+
+    //绑定回复按钮的鼠标经过事件
+    $(".comment_content,.comment_reply li").each(function(){
+        $(this).hover(function(){
+            $(this).append("<span class='reply_button'> <a href='javascript:void(0);' onclick='reply_click(this);'>回复</a></span>");
+        },function(){
+            $(this).children(".reply_button").remove();
+        });
+    });
+    });
+
+    //回复按钮点击触发的方法
+    function reply_click(obj){
+        //获取回复按钮对应的评论或回复（DOM转成jQuery对象）
+        var comment=obj.parentElement.parentElement;
+        var $c=$(comment);
+        //获取相关信息
+        var root=$c.attr("root");
+        var role=$c.attr("role");
+        var base=$c.attr("base");
+
+        //显示回复面板
+        $("#reply_form").hide();
+        $c.after($("#reply_form"));
+        $("#reply_form").slideDown(200);
+
+        //设置回复表单相关值
+        $("#reply_to").val(role);
+        $("#root_id").val(root);
+        $("#reply_name").val(base);
+        return false;
+    }
+    </script>

@@ -36,7 +36,7 @@ def global_setting(request):
      # 分类信息获取（导航数据）
   #  category_list = Category.objects.all()
     #广告数据
-    ad_list = Ad.objects.all()[:5]
+   # ad_list = Ad.objects.all()[:5]
     # 文章归档数据
     archive_list = Article.objects.distinct_date()
     #标签云

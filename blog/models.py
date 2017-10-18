@@ -106,13 +106,13 @@ class Read(models.Model):
     date_publish = models.DateTimeField(auto_now_add=True, verbose_name='发布时间')
     user = models.ForeignKey(user_x, verbose_name='用户')
     tag = models.ManyToManyField(Tag, verbose_name='标签')
-    index = models.IntegerField(default=999, verbose_name='排列顺序(从小到大)')
+    order = models.IntegerField(default=999, verbose_name='排列顺序(从小到大)')
 
 
     class Meta:
         verbose_name = '站长推荐'
         verbose_name_plural = verbose_name
-        ordering = ['index', 'id','-date_publish']
+        ordering = ['order', 'id','-date_publish']
 
 
     def __unicode__(self):

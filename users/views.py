@@ -19,7 +19,7 @@ def register(request):
     else:
         form  = RegisterForm()
 
-        return render(request,'users/register.html',{'form':form,'next':redirect_to})
+    return render(request,'users/register.html',{'form':form,'next':redirect_to})
 
 
 

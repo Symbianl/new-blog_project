@@ -7,3 +7,4 @@ upload/
 log/
 
 blog/migrations/
+users/migrations/

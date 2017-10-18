@@ -96,7 +96,7 @@
                                 <li root='{{reply.root_id}}'
                                     role='{{reply.id}}'
                                     base='{{reply.user_name}}'>
-                                    {{reply.user_name}} 回复 {{reply.reply_name}} ({{ reply.submit_date|date:"Y-m-d H:i"}})：{{ reply.comment }}
+                                    {{reply.user_name}} <font color="blue">回复</font>  {{reply.reply_name}} ({{ reply.submit_date|date:"Y-m-d H:i"}})：{{ reply.comment }}
                                 </li>
                             {% endfor %}
                         </ul>

@@ -2,6 +2,7 @@
 {% load staticfiles %}
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
+    <meta name="toTop" content="true">
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -26,7 +27,11 @@
     <link rel="stylesheet" href="{% static 'font-awesome-4.4.0/css/font-awesome.min.css' %}"  type="text/css">
 
 </head>
-
+<style>
+    html{
+        height: 400px;
+    }
+</style>
 <body>
 <header>
 	<!--Top-->
@@ -161,7 +166,8 @@
         <script src="{% static 'js/respond.min.js' %}"></script>
     <![endif]-->
 
-
+    <!-- 返回顶部 -->
+    <script src="{% static 'js/toTop.js' %}"></script>
 	<!-- JS -->
 	<script src="{% static 'owl-carousel/owl.carousel.js' %}"></script>
     <script>

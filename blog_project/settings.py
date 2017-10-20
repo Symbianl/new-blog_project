@@ -120,7 +120,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'zh-hans'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -128,10 +128,25 @@ USE_L10N = True
 
 USE_TZ = True
 
+#登录返回首页
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackends'
+# AUTHENTICATION_BACKENDS =(
+#     'django.contrib.auth.backends.ModelBackend',
+#     'users.backends.EmailBackend'
+# )
+
+#邮件配置
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  #模拟邮件向终端发送邮件
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True                                #与SMTP服务器通信时，是否启动TLS链接（安全链接）。默认是false
+EMAIL_HOST =   'smtp.qq.com'       #SMTP地址
+EMAIL_PORT =  25         #SMTP端口
+EMAIL_HOST_USER = '313904661@qq.com'     #自己的邮箱
+EMAIL_HOST_PASSWORD = 'zysggoorxpvfbgec' #邮箱授权码
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER   #邮件头部内容
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/

@@ -132,10 +132,11 @@ USE_TZ = True
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
 
-# AUTHENTICATION_BACKENDS =(
-#     'django.contrib.auth.backends.ModelBackend',
-#     'users.backends.EmailBackend'
-# )
+#邮箱登录设置
+AUTHENTICATION_BACKENDS =(
+    'django.contrib.auth.backends.ModelBackend',
+    'users.backends.EmailBackend',
+)
 
 #邮件配置
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  #模拟邮件向终端发送邮件

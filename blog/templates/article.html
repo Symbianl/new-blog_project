@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% load myfilter %}
+{% load comments %}
 {% block left_content %}
 {% block extra_footer %}
 {# 导入评论模块的模板标签 #}
@@ -17,7 +18,9 @@
 					<div class="info">
 						<h5>By <a href="#">{{ article.user.username }}</a></h5>
 						<span><i class="fa fa-calendar"></i>{{ article.date_publish | date:'Y-m-d' }}</span>
-						<span><i class="fa fa-heart"></i>{{ article.read_num }}</span>
+						<span><i class="fa fa-eye"></i>{{ article.read_num }}</span>
+                        {% get_comment_count for article as comment_count %}
+                    <span><i class="fa fa-comment"></i>{{ comment_count }}</span>
 					</div>
 					<p style="margin-top: 20px"> {{ article.content | safe }}</p>
 				</div>

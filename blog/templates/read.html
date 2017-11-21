@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% load myfilter %}
+{% load comments %}
 {% block left_content %}
 {% block extra_footer %}
   <!--  {#设置提交评论#} -->
@@ -16,6 +17,9 @@
 					<div class="info">
 						<h5>By <a href="#">{{ read.user.username }} </a></h5>
 						<span><i class="fa fa-calendar"></i>{{ read.date_publish | date:'Y-m-d' }}</span>
+                        <span><i class="fa fa-eye"></i>{{ article.read_num }}</span>
+                        {% get_comment_count for article as comment_count %}
+                    <span><i class="fa fa-comment"></i>{{ comment_count }}</span>
 					<!--	<span><i class="fa fa-heart"></i>1,200</span> -->
 					</div>
 					<p style="margin-top: 20px"> {{ read.content | safe }}</p>

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load comments %}
 {% block left_content %}
 {% csrf_token %}
 
@@ -14,7 +15,10 @@
 						<div class="info">
 							<h5>By <a href="#">{{ article.user.username }}</a></h5>
 							<span><i class="fa fa-calendar"></i> {{ article.date_publish | date:'Y-m-d' }}</span>
-							<span><i class="fa fa-comment"></i>{{ article.read_num }}</span>
+							<span><i class="fa fa-eye"></i>{{ article.read_num }}</span>
+                            {% get_comment_count for article as comment_count %}
+                            <span><i class="fa fa-comment"></i>{{ comment_count }}</span>
+
 							<!--<span><i class="fa fa-heart"></i></span>-->
 							<ul class="list-inline">
 								{% for tag in article.tag.all %}
